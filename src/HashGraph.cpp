@@ -31,6 +31,14 @@ void HashGraph::init(const size_t nodes, const size_t edges) {
     graph.reserve(nodes);
 }
 
+void HashGraph::forEachNode(NodeCall callback) {
+
+    for(auto& each : graph) {
+
+        callback(each.first);
+    }
+}
+
 const Graph::EdgeList HashGraph::getEdges() const {
 
     EdgeList ret;
@@ -78,6 +86,8 @@ void HashGraph::addNode(const Node node) {
 
 void HashGraph::addEdge(const Node from, const Node to, const Weight weight) {
 
+    addNode(from);
+    addNode(to);
     graph[from][to] = weight;
 }
 

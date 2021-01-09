@@ -34,6 +34,17 @@ void MatrixGraph::init(const size_t nodes, const size_t edges) {
     graph.resize(nodes, std::vector<Weight>(nodes, NAN));
 }
 
+void MatrixGraph::forEachNode(NodeCall callback) {
+
+    for(Node node = 0; node < graph.size(); ++node) {
+
+        if(haveNode(node)) {
+
+            callback(node);
+        }
+    }
+}
+
 const Graph::EdgeList MatrixGraph::getEdges() const {
 
     EdgeList ret;

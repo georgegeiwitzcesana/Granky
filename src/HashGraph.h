@@ -19,8 +19,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef GRAPHER_MAP_GRAPH_H
-#define GRAPHER_MAP_GRAPH_H
+#ifndef GRANKY_MAP_GRAPH_H
+#define GRANKY_MAP_GRAPH_H
 
 #include <unordered_map>
 
@@ -46,6 +46,7 @@ public:
     virtual Weight getWeight(const Node from, const Node to) const override;
     virtual void addNode(const Node node) override;
     virtual void addEdge(const Node from, const Node to, const Weight weight) override;
+    virtual void forEachNode(NodeCall callback) override;
 
 private:
     typedef std::unordered_map<Node, std::unordered_map<Node, Weight>> HashTable;
@@ -54,4 +55,4 @@ private:
 
 } // namespace granky
 
-#endif // GRAPHER_MAP_GRAPH_H
+#endif // GRANKY_MAP_GRAPH_H

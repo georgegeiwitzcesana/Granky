@@ -19,15 +19,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef GRAPHER_GRAPH_H
-#define GRAPHER_GRAPH_H
+#ifndef GRANKY_GRAPH_H
+#define GRANKY_GRAPH_H
 
-#include <math.h>
+#include <math.h> // isnan
+
 #include <forward_list>
-#include <memory>
-
+#include <memory> // unique_ptr
 #include <ostream>
 #include <istream>
+#include <functional> // fuction
 
 namespace granky {
 
@@ -37,6 +38,7 @@ public:
     typedef int Node;
     typedef double Weight;
     typedef std::unique_ptr<Graph> Instance;
+    typedef std::function<void(Node)> NodeCall;
 
     struct Edge {
         
@@ -51,17 +53,19 @@ public:
     
     template<class GRAPH_TYPE> static Instance create(const std::string_view filename); 
     template<class GRAPH_TYPE> static Instance create(std::istream& in); 
+
     virtual bool haveNode(const Node node) const = 0;
     virtual Weight getWeight(const Node from, const Node to) const = 0;
     virtual const EdgeList getEdges() const = 0;
     virtual void addNode(const Node node) = 0;
+    virtual void forEachNode(NodeCall callback) = 0;
     
     virtual void addEdge(
             const Node from,
             const Node to,
             const Weight weight) = 0;
 
-    inline virtual void addDoubleEdge(
+    inline void addDoubleEdge(
             const Node from,
             const Node to,
             const Weight weight) {
@@ -116,4 +120,4 @@ Graph::Instance Graph::create(std::istream& in) {
 
 } // namespace granky
 
-#endif // GRAPHER_GRAPH_H
+#endif // GRANKY_GRAPH_H

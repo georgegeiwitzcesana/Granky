@@ -19,8 +19,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef GRAPHER_MATRIXGRAPH_H
-#define GRAPHER_MATRIXGRAPH_H
+#ifndef GRANKY_MATRIXGRAPH_H
+#define GRANKY_MATRIXGRAPH_H
 
 #include <vector>
 
@@ -45,6 +45,9 @@ public:
     virtual bool haveNode(const Node node) const override;
     virtual Weight getWeight(const Node from, const Node to) const override;
     virtual void addNode(const Node node) override;
+
+    virtual void forEachNode(NodeCall callback) override;
+
     virtual void addEdge(
             const Node from,
             const Node to,
@@ -57,4 +60,4 @@ private:
 
 } // namespace granky
 
-#endif // GRAPHER_MATRIXGRAPH_H
+#endif // GRANKY_MATRIXGRAPH_H

@@ -11,9 +11,11 @@ And to run:
 
     bin/granky.bin in/0.gky
 
-This will run IOTest, which takes the graph defined in the file in/0.gky, parses it into both an adjacency matrix 
+This will run FileTest, which takes the graph defined in the file in/0.gky, parses it into both an adjacency matrix 
 and an adjacency list, converts both back into text format. It then prints each edge in each graph, followed by
-each node in each graph.
+each node in each graph, followed by each node in each graph along with their neighbors and weights. The graphs
+should be identical, although they will be in different orders because HashGraph uses unordered_map for its
+adjacency list.
 
 .gky files are defined as follows:
 

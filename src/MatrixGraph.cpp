@@ -45,6 +45,27 @@ void MatrixGraph::forEachNode(NodeCall callback) {
     }
 }
 
+void MatrixGraph::forEachEgress(Node from, EdgeCall callback) {
+
+    if(!haveNode(from)) {
+
+        return;
+    }
+
+    for(Node to = 0; to < graph.size(); ++to) {
+
+        if(from == to) {
+
+            continue;
+        }
+
+        if(const auto weight = getWeight(from, to); isWeight(weight)) {
+
+            callback(to, weight);
+        }
+    }
+}
+
 const Graph::EdgeList MatrixGraph::getEdges() const {
 
     EdgeList ret;

@@ -29,6 +29,11 @@ void HashGraph::init(const size_t nodes, const size_t edges) {
 
     graph.clear();
     graph.reserve(nodes);
+
+    for(auto& each : graph) {
+
+        each.second.reserve(edges);
+    }
 }
 
 void HashGraph::forEachNode(NodeCall callback) {
@@ -36,6 +41,19 @@ void HashGraph::forEachNode(NodeCall callback) {
     for(auto& each : graph) {
 
         callback(each.first);
+    }
+}
+
+void HashGraph::forEachEgress(Node from, EdgeCall callback) {
+
+    if(!haveNode(from)) {
+
+        return;
+    }
+
+    for(auto& each : graph[from]) {
+
+        callback(each.first, each.second);
     }
 }
 

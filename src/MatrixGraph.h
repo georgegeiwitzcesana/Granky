@@ -47,6 +47,7 @@ public:
     virtual void addNode(const Node node) override;
 
     virtual void forEachNode(NodeCall callback) override;
+    virtual void forEachEgress(Node from, EdgeCall callback) override;
 
     virtual void addEdge(
             const Node from,

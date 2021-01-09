@@ -39,6 +39,7 @@ public:
     typedef double Weight;
     typedef std::unique_ptr<Graph> Instance;
     typedef std::function<void(Node)> NodeCall;
+    typedef std::function<void(Node, Weight)> EdgeCall;
 
     struct Edge {
         
@@ -58,7 +59,9 @@ public:
     virtual Weight getWeight(const Node from, const Node to) const = 0;
     virtual const EdgeList getEdges() const = 0;
     virtual void addNode(const Node node) = 0;
+
     virtual void forEachNode(NodeCall callback) = 0;
+    virtual void forEachEgress(Node from, EdgeCall callback) = 0;
     
     virtual void addEdge(
             const Node from,

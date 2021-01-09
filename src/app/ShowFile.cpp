@@ -22,9 +22,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <iostream> // cout
 #include <string> // string_view
 
-#include "Test.h"
-#include "../src/MatrixGraph.h"
-#include "../src/HashGraph.h"
+#include "Main.h"
+#include "../lib/MatrixGraph.h"
+#include "../lib/HashGraph.h"
 
 void writeGraph(granky::Graph::Instance& graph) {
 

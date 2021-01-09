@@ -1,5 +1,5 @@
 CC=g++
 CFLAGS=-std=c++17
 
-all:
-	$(CC) $(CFLAGS) tests/FileTest.cpp src/Graph.cpp src/MatrixGraph.cpp src/HashGraph.cpp -o bin/granky.bin
+showfile:
+	$(CC) $(CFLAGS) src/app/ShowFile.cpp src/lib/Graph.cpp src/lib/MatrixGraph.cpp src/lib/HashGraph.cpp -o bin/showfile.bin

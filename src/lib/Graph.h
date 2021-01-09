@@ -19,8 +19,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef GRANKY_GRAPH_H
-#define GRANKY_GRAPH_H
+#ifndef GRANKY_LIB_GRAPH_H
+#define GRANKY_LIB_GRAPH_H
 
 #include <math.h> // isnan
 
@@ -120,7 +120,6 @@ Graph::Instance Graph::create(std::istream& in) {
     return ret;
 }
 
-
 } // namespace granky
 
-#endif // GRANKY_GRAPH_H
+#endif // GRANKY_LIB_GRAPH_H

@@ -19,8 +19,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef GRANKY_MATRIXGRAPH_H
-#define GRANKY_MATRIXGRAPH_H
+#ifndef GRANKY_LIB_MATRIXGRAPH_H
+#define GRANKY_LIB_MATRIXGRAPH_H
 
 #include <vector>
 
@@ -61,4 +61,4 @@ private:
 
 } // namespace granky
 
-#endif // GRANKY_MATRIXGRAPH_H
+#endif // GRANKY_LIB_MATRIXGRAPH_H

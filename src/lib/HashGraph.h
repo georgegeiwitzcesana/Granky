@@ -19,8 +19,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef GRANKY_MAP_GRAPH_H
-#define GRANKY_MAP_GRAPH_H
+#ifndef GRANKY_LIB_MAPGRAPH_H
+#define GRANKY_LIB_MAPGRAPH_H
 
 #include <unordered_map>
 
@@ -57,4 +57,4 @@ private:
 
 } // namespace granky
 
-#endif // GRANKY_MAP_GRAPH_H
+#endif // GRANKY_LIB_MAPGRAPH_H

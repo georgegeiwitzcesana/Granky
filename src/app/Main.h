@@ -19,8 +19,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef GRAPHER_MAIN_H
-#define GRAPHER_MAIN_H
+#ifndef GRANKY_APP_MAIN_H
+#define GRAPHER_APP_MAIN_H
 
 #include <iostream>
 

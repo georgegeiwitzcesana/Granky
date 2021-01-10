@@ -33,9 +33,10 @@ void writeGraph(granky::Graph::Instance& graph) {
 
 void writeNodes(granky::Graph::Instance& matrixGraph, granky::Graph::Instance& hashGraph) {
 
-    granky::Graph::NodeCall callback = [](granky::Graph::Node node) {
+    const granky::Graph::NodeCall callback = [](granky::Graph::Node node) {
 
         std::cout << node << std::endl;
+        return -1;
     };
 
     std::cout << std::endl << "MatrixGraph nodes:" << std::endl;
@@ -49,12 +50,15 @@ void writeNodes(granky::Graph::Instance& matrixGraph, granky::Graph::Instance& h
 
 void writeEgresses(granky::Graph::Instance& matrixGraph, granky::Graph::Instance& hashGraph) {
 
-    static granky::Graph::EdgeCall edgeCall = [](granky::Graph::Node node, granky::Graph::Weight weight) {
+    static const granky::Graph::ProgressCall edgeCall = 
+        [](granky::Graph::Node node, granky::Graph::Weight weight) {
 
         std::cout << node << "w" << weight << ", ";
+        return -1;
     };
 
-    static auto printEgresses = [](granky::Graph::Instance& graph, granky::Graph::Node node) {
+    static const auto printEgresses = 
+        [](const granky::Graph::Instance& graph, const granky::Graph::Node node) {
 
         std::cout << node << ": ";
         graph->forEachEgress(node, edgeCall);
@@ -64,11 +68,13 @@ void writeEgresses(granky::Graph::Instance& matrixGraph, granky::Graph::Instance
     granky::Graph::NodeCall matrixCall = [&matrixGraph](granky::Graph::Node node) {
 
         printEgresses(matrixGraph, node);
+        return -1;
     };
 
     granky::Graph::NodeCall hashCall = [&hashGraph](granky::Graph::Node node) {
 
         printEgresses(hashGraph, node);
+        return -1;
     };
     
     std::cout << std::endl << "MatrixGraph egresses:" << std::endl;

@@ -47,8 +47,8 @@ public:
     virtual void addNode(const Node node) override;
     virtual void addEdge(const Node from, const Node to, const Weight weight) override;
 
-    virtual void forEachNode(NodeCall callback) override;
-    virtual void forEachEgress(Node node, EdgeCall callback) override;
+    virtual Node forEachNode(const NodeCall& callback) const override;
+    virtual Node forEachEgress(Node node, const ProgressCall& callback) const override;
 
 private:
     typedef std::unordered_map<Node, std::unordered_map<Node, Weight>> HashTable;

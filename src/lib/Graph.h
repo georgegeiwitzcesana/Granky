@@ -38,8 +38,9 @@ public:
     typedef int Node;
     typedef double Weight;
     typedef std::unique_ptr<Graph> Instance;
-    typedef std::function<void(Node)> NodeCall;
-    typedef std::function<void(Node, Weight)> EdgeCall;
+    typedef std::function<Node(Node)> NodeCall;
+    typedef std::function<Node(Node, Weight)> ProgressCall;
+    typedef std::function<Node(Node, Node, Weight)> EdgeCall;
 
     struct Edge {
         
@@ -59,23 +60,10 @@ public:
     virtual Weight getWeight(const Node from, const Node to) const = 0;
     virtual const EdgeList getEdges() const = 0;
     virtual void addNode(const Node node) = 0;
+    virtual void addEdge(const Node from, const Node to, const Weight weight) = 0;
 
-    virtual void forEachNode(NodeCall callback) = 0;
-    virtual void forEachEgress(Node from, EdgeCall callback) = 0;
-    
-    virtual void addEdge(
-            const Node from,
-            const Node to,
-            const Weight weight) = 0;
-
-    inline void addDoubleEdge(
-            const Node from,
-            const Node to,
-            const Weight weight) {
-    
-        addEdge(from, to, weight);
-        addEdge(to, from, weight);
-    }
+    virtual Node forEachNode(const NodeCall& callback) const = 0;
+    virtual Node forEachEgress(const Node from, const ProgressCall& callback) const = 0;
     
     inline bool isNode(const Node node) const {
         
@@ -91,7 +79,62 @@ public:
         
         return !isnan(getWeight(from, to));
     };
+ 
+    inline bool haveEdge(const Node from, const Node to, const Weight weight) const {
+
+        if(!isWeight(weight)) {
+
+            return false;
+        }
+
+        const Weight w = getWeight(from, to);
+        return isWeight(w) && w == weight;
+    }
+
+    inline bool haveDigress(const Node from, const Node to) const {
+
+        return haveEdge(from, to) || haveEdge(to, from);
+    }
+
+    inline Node forEachEdge(const EdgeCall& edgeCall) const {
+
+        const NodeCall nodeCall = [this, &edgeCall](Node from) {
+
+            const ProgressCall egressCall = [&edgeCall, &from](Node to, Weight weight) {
+
+                return edgeCall(from, to, weight);
+            };
+
+            return forEachEgress(from, egressCall);
+        };
+
+        return forEachNode(nodeCall);
+    }
+
+    inline bool isSubset(const Graph& other) const {
+
+        return false;    
+    }
+
+    bool operator==(const Graph::Instance& other) {
+
+        const EdgeCall edgeCall = [this, &other](Node from, Node to, Weight weight) {
+
+            return 0;
+        };
+
+        return false;
+    }
     
+    inline void addDoubleEdge(
+            const Node from,
+            const Node to,
+            const Weight weight) {
+    
+        addEdge(from, to, weight);
+        addEdge(to, from, weight);
+    }
+       
     friend std::ostream& operator << (std::ostream& out, const Graph& g);
     friend std::istream& operator >> (std::istream& in, Graph& g);
 

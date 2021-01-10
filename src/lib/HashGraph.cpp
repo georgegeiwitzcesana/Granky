@@ -36,25 +36,35 @@ void HashGraph::init(const size_t nodes, const size_t edges) {
     }
 }
 
-void HashGraph::forEachNode(NodeCall callback) {
+Graph::Node HashGraph::forEachNode(const NodeCall& callback) const {
 
     for(auto& each : graph) {
 
-        callback(each.first);
+        if(auto ret = callback(each.first); isNode(ret)) {
+
+            return ret;
+        }
     }
+
+    return -1;
 }
 
-void HashGraph::forEachEgress(Node from, EdgeCall callback) {
+Graph::Node HashGraph::forEachEgress(const Node from, const ProgressCall& callback) const {
 
     if(!haveNode(from)) {
 
-        return;
+        return -1;
     }
 
-    for(auto& each : graph[from]) {
+    for(auto& each : graph.at(from)) {
 
-        callback(each.first, each.second);
+        if(auto ret = callback(each.first, each.second); isNode(ret)) {
+
+            return ret;
+        }
     }
+
+    return -1;
 }
 
 const Graph::EdgeList HashGraph::getEdges() const {

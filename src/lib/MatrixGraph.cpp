@@ -34,25 +34,31 @@ void MatrixGraph::init(const size_t nodes, const size_t edges) {
     graph.resize(nodes, std::vector<Weight>(nodes, NAN));
 }
 
-void MatrixGraph::forEachNode(NodeCall callback) {
+Graph::Node MatrixGraph::forEachNode(const NodeCall& callback) const {
 
-    for(Node node = 0; node < graph.size(); ++node) {
+    Node ret = -1;
+
+    for(Node node = 0; !isNode(ret) && node < graph.size(); ++node) {
 
         if(haveNode(node)) {
 
-            callback(node);
+            ret = callback(node); 
         }
     }
+
+    return ret;
 }
 
-void MatrixGraph::forEachEgress(Node from, EdgeCall callback) {
+Graph::Node MatrixGraph::forEachEgress(const Node from, const ProgressCall& callback) const {
 
     if(!haveNode(from)) {
 
-        return;
+        return -1;
     }
 
-    for(Node to = 0; to < graph.size(); ++to) {
+    Node ret = -1;
+    
+    for(Node to = 0; !isNode(ret) && to < graph.size(); ++to) {
 
         if(from == to) {
 
@@ -61,9 +67,11 @@ void MatrixGraph::forEachEgress(Node from, EdgeCall callback) {
 
         if(const auto weight = getWeight(from, to); isWeight(weight)) {
 
-            callback(to, weight);
+            ret = callback(to, weight);
         }
     }
+
+    return ret;
 }
 
 const Graph::EdgeList MatrixGraph::getEdges() const {

@@ -113,19 +113,19 @@ public:
 
     inline bool isSubset(const Graph& other) const {
 
-        return false;    
-    }
+        const EdgeCall edgeCall = [&other](Node from, Node to, Weight weight) {
 
-    bool operator==(const Graph::Instance& other) {
+            if(other.haveEdge(from, to, weight)) {
 
-        const EdgeCall edgeCall = [this, &other](Node from, Node to, Weight weight) {
+                return -1;
+            }
 
-            return 0;
+            return to;
         };
 
-        return false;
+        return !isNode(forEachEdge(edgeCall));
     }
-    
+   
     inline void addDoubleEdge(
             const Node from,
             const Node to,
@@ -144,9 +144,6 @@ protected:
     void parse(std::string_view filename);
 };
 
-std::ostream& operator << (std::ostream& out, const Graph& graph);
-std::istream& operator >> (std::istream& in, Graph& graph);
-
 template<class GRAPH_TYPE>
 Graph::Instance Graph::create(const std::string_view filename) {
 
@@ -162,6 +159,11 @@ Graph::Instance Graph::create(std::istream& in) {
     in >> *ret;
     return ret;
 }
+
+bool operator == (const Graph& left, const Graph& right);
+bool operator != (const Graph& left, const Graph& right);
+std::ostream& operator << (std::ostream& out, const Graph& graph);
+std::istream& operator >> (std::istream& in, Graph& graph);
 
 } // namespace granky
 

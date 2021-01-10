@@ -33,6 +33,16 @@ void Graph::parse(std::string_view filename) {
     file >> *this;
 }
 
+bool operator == (const Graph& left, const Graph& right) {
+
+    return left.isSubset(right) && right.isSubset(left);
+}
+
+bool operator != (const Graph& left, const Graph& right) {
+
+    return !(left == right);
+}
+
 std::ostream& operator << (std::ostream& out, const Graph& graph) {
 
     const auto edges = graph.getEdges();

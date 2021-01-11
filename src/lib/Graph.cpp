@@ -22,15 +22,22 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <istream>
 #include <fstream>
 #include <iostream>
+#include <sstream>
 
 #include "Graph.h"
 
 namespace granky {
 
-void Graph::parse(std::string_view filename) {
+void Graph::parseFile(std::string_view filename) {
 
     std::ifstream file(filename.data());
     file >> *this;
+}
+
+void Graph::parseString(std::string_view str) {
+
+    std::stringstream stream(str.data());
+    stream >> *this;
 }
 
 bool operator == (const Graph& left, const Graph& right) {
@@ -45,15 +52,15 @@ bool operator != (const Graph& left, const Graph& right) {
 
 std::ostream& operator << (std::ostream& out, const Graph& graph) {
 
-    const auto edges = graph.getEdges();
-    
-    for(const auto& edge : edges) {
+    const Graph::EdgeCall edgeCall = [&out](Graph::Node from, Graph::Node to, Graph::Weight weight) {
 
-        out << edge.from << " ";
-        out << edge.to << " ";
-        out << edge.weight << std::endl;
-    }
+        out << from << " ";
+        out << to << " ";
+        out << weight << std::endl;
+        return -1;
+    };
 
+    graph.forEachEdge(edgeCall);
     return out;
 }
 

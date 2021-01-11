@@ -20,19 +20,18 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include <cassert>
-#include <math.h>
+#include <math.h> // isnan
+#include <iostream> // cout, endl
 
 #include "MatrixGraph.h"
+
+#ifndef VERBOSE
+#define VERBOSE 0
+#endif
 
 namespace granky {
 
 MatrixGraph::MatrixGraph() {};
-
-void MatrixGraph::init(const size_t nodes, const size_t edges) {
-
-    graph.clear();
-    graph.resize(nodes, std::vector<Weight>(nodes, NAN));
-}
 
 Graph::Node MatrixGraph::forEachNode(const NodeCall& callback) const {
 
@@ -146,6 +145,11 @@ void MatrixGraph::addEdge(
     addNode(from);
     addNode(to);
     graph[from][to] = weight;
+    
+    if(VERBOSE) {
+
+        std::cout << "matrix added: " << from << " " << to << " " << " "  << weight << std::endl; 
+    }
 }
 
 } // namespace granky

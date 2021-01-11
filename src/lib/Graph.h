@@ -30,6 +30,24 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <istream>
 #include <functional> // fuction
 
+/**
+ * LEXICON
+ *
+ * Node: a vertex in a graph
+ * * A node is represented by a numeric ID no lower than zero.
+ * Leaf: an empty or nonexistent node, represented by giving a node a value below zero.
+ * Edge: a weighted, directed connection between two nodes.
+ * * There may be at most one edge in a given direction between a given pair of nodes.
+ * * An empty or nonexistent edge has a value of NAN.
+ * Egress (from x to y): an edge leading from node x to node y.
+ * Ingress (from x to y): an edge leading to node x from node y.
+ * Progress: in a given context, either all ingresses or all egresses are considered progresses.
+ *  * If an egress is considered a progress in a given context, than no ingresses are progresses in that context.
+ *  * If an ingress is considered a progress in a given context, than no egresses are progresses in that context.
+ * Regress: the opposite of a progress, for purposes of given context.
+ * Digress: either an egress or an ingress, in a context that considers the distinction irrelevant.
+ */
+
 namespace granky {
 
 class Graph {
@@ -51,8 +69,10 @@ public:
 
     typedef std::forward_list<Edge> EdgeList;
 
-    virtual void init(const size_t nodes, const size_t edges) = 0;
+    void parseFile(std::string_view filename);
+    void parseString(std::string_view str);
     
+    template<class GRAPH_TYPE> static Instance create(); 
     template<class GRAPH_TYPE> static Instance create(const std::string_view filename); 
     template<class GRAPH_TYPE> static Instance create(std::istream& in); 
 
@@ -62,6 +82,10 @@ public:
     virtual void addNode(const Node node) = 0;
     virtual void addEdge(const Node from, const Node to, const Weight weight) = 0;
 
+    /**
+     * All forEach methods stop iterating when the callback returns a non-negative number,
+     * and always return the last value returned by the callback.
+     */
     virtual Node forEachNode(const NodeCall& callback) const = 0;
     virtual Node forEachEgress(const Node from, const ProgressCall& callback) const = 0;
     
@@ -141,14 +165,20 @@ public:
     static constexpr const double DEFAULT_DEFAULT_WEIGHT = 1.0;
 
 protected:
-    void parse(std::string_view filename);
 };
+
+template<class GRAPH_TYPE>
+Graph::Instance Graph::create() {
+
+    auto ret = Graph::Instance(new(std::nothrow) GRAPH_TYPE());
+    return ret;
+}
 
 template<class GRAPH_TYPE>
 Graph::Instance Graph::create(const std::string_view filename) {
 
     Graph::Instance ret = Graph::Instance(new(std::nothrow) GRAPH_TYPE());
-    ret->parse(filename);
+    ret->parseFile(filename);
     return ret;
 }
 

@@ -39,8 +39,6 @@ public:
     MatrixGraph& operator=(const MatrixGraph&&) = delete;
     MatrixGraph();
  
-    virtual void init(const size_t nodes, const size_t edges) override;
-    
     virtual const EdgeList getEdges() const override;
     virtual bool haveNode(const Node node) const override;
     virtual Weight getWeight(const Node from, const Node to) const override;

@@ -25,28 +25,19 @@ namespace granky {
 
 HashGraph::HashGraph() {};
 
-void HashGraph::init(const size_t nodes, const size_t edges) {
-
-    graph.clear();
-    graph.reserve(nodes);
-
-    for(auto& each : graph) {
-
-        each.second.reserve(edges);
-    }
-}
-
 Graph::Node HashGraph::forEachNode(const NodeCall& callback) const {
 
+    Node ret = -1;
+
     for(auto& each : graph) {
 
-        if(auto ret = callback(each.first); isNode(ret)) {
+        if(ret = callback(each.first); isNode(ret)) {
 
             return ret;
         }
     }
 
-    return -1;
+    return ret;
 }
 
 Graph::Node HashGraph::forEachEgress(const Node from, const ProgressCall& callback) const {
@@ -56,15 +47,17 @@ Graph::Node HashGraph::forEachEgress(const Node from, const ProgressCall& callba
         return -1;
     }
 
+    Node ret = -1;
+
     for(auto& each : graph.at(from)) {
 
-        if(auto ret = callback(each.first, each.second); isNode(ret)) {
+        if(ret = callback(each.first, each.second); isNode(ret)) {
 
             return ret;
         }
     }
 
-    return -1;
+    return ret;
 }
 
 const Graph::EdgeList HashGraph::getEdges() const {

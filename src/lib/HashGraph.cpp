@@ -100,6 +100,7 @@ void HashGraph::addNode(const Node node) {
     if(!haveNode(node)) {
 
         graph[node] = {};
+        endNode = std::max(endNode, node + 1);
     }
 }
 
@@ -113,6 +114,11 @@ void HashGraph::addEdge(const Node from, const Node to, const Weight weight) {
 Graph::Node HashGraph::getNodeCount() const {
 
     return static_cast<Node>(graph.size());
+}
+
+Graph::Node HashGraph::getEndNode() const {
+
+    return endNode;
 }
 
 } // namespace granky

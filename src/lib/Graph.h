@@ -101,7 +101,8 @@ public:
 
     void parseFile(std::string_view filename);
     void parseString(std::string_view str);
-    
+
+    // factories    
     template<class GRAPH_TYPE> static Instance create(); 
     template<class GRAPH_TYPE> static Instance create(const std::string_view filename); 
     template<class GRAPH_TYPE> static Instance create(std::istream& in); 
@@ -112,6 +113,7 @@ public:
     virtual void addNode(const Node node) = 0;
     virtual void addEdge(const Node from, const Node to, const Weight weight) = 0;
     virtual Node getNodeCount() const = 0;
+    virtual Node getEndNode() const = 0;
 
     /**
      * All forEach methods stop iterating when the callback returns a non-negative number,
@@ -130,85 +132,14 @@ public:
         return !isnan(weight);
     };
     
-    inline bool haveEdge(const Node from, const Node to) const {
-        
-        return isWeight(getWeight(from, to));
-    };
- 
-    inline bool haveEdge(const Node from, const Node to, const Weight weight) const {
-
-        if(!isWeight(weight)) {
-
-            return false;
-        }
-
-        const Weight w = getWeight(from, to);
-        return isWeight(w) && w == weight;
-    }
-
-    inline bool haveDigress(const Node from, const Node to) const {
-
-        return haveEdge(from, to) || haveEdge(to, from);
-    }
-
-    inline Node forEachEdge(const EdgeCall& edgeCall) const {
-
-        const NodeCall nodeCall = [this, &edgeCall](Node from) {
-
-            const ProgressCall egressCall = [&edgeCall, &from](Node to, Weight weight) {
-
-                return edgeCall(from, to, weight);
-            };
-
-            return forEachEgress(from, egressCall);
-        };
-
-        return forEachNode(nodeCall);
-    }
-
-    inline bool isSubset(const Graph& other) const {
-
-        const EdgeCall edgeCall = [&other](Node from, Node to, Weight weight) {
-
-            if(other.haveEdge(from, to, weight)) {
-
-                return -1;
-            }
-
-            return to;
-        };
-
-        return !isNode(forEachEdge(edgeCall));
-    }
-   
-    inline void addDoubleEdge(
-            const Node from,
-            const Node to,
-            const Weight weight) {
-    
-        addEdge(from, to, weight);
-        addEdge(to, from, weight);
-    }
-
-    inline Table::Instance getBlankNodeCheck() {
-
-        return move(Table::create<NodeCheck>(getNodeCount()));
-    }
-
-    inline Table::Instance getNodeCheck() {
-
-        Table::Instance ret = getBlankNodeCheck();
-
-        const NodeCall callback = [&ret](Node node) {
-
-            ret->set(node, 1);
-            return -1;
-        };
-
-        forEachNode(callback);
-
-        return move(ret);
-    }
+    bool haveEdge(const Node from, const Node to) const;
+    bool haveEdge(const Node from, const Node to, const Weight weight) const; 
+    bool haveDigress(const Node from, const Node to) const; 
+    Node forEachEdge(const EdgeCall& edgeCall) const; 
+    bool isSubset(const Graph& other) const; 
+    void addDoubleEdge(const Node from, const Node to, const Weight weight); 
+    Table::Instance getBlankNodeCheck(); 
+    Table::Instance getNodeCheck(); 
 
     friend std::ostream& operator << (std::ostream& out, const Graph& g);
     friend std::istream& operator >> (std::istream& in, Graph& g);

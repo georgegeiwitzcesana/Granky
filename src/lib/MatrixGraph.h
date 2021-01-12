@@ -44,6 +44,7 @@ public:
     virtual Weight getWeight(const Node from, const Node to) const override;
     virtual void addNode(const Node node) override;
     virtual Node getNodeCount() const override;
+    virtual Node getEndNode() const override;
 
     virtual Node forEachNode(const NodeCall& callback) const override;
     virtual Node forEachEgress(const Node from, const ProgressCall& callback) const override;

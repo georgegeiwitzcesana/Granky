@@ -83,15 +83,15 @@ const Graph::EdgeList MatrixGraph::getEdges() const {
 
         for(Node to(0); to < each.size(); ++to) {
        
-            if(from == to) {
-
-                continue;
-            }
-
             const auto& weight = each[to];
 
             if(isWeight(weight)) {
-                
+ 
+                if(!weight && from == to) {
+
+                    continue;
+                }
+               
                 ret.push_front({from, to, weight});
             }
         }
@@ -156,6 +156,11 @@ void MatrixGraph::addEdge(
 Graph::Node MatrixGraph::getNodeCount() const {
 
     return nodeCount;
+}
+
+Graph::Node MatrixGraph::getEndNode() const {
+
+    return static_cast<Node>(graph.size());
 }
 
 } // namespace granky

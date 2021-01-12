@@ -45,6 +45,7 @@ public:
     virtual void addNode(const Node node) override;
     virtual void addEdge(const Node from, const Node to, const Weight weight) override;
     virtual Node getNodeCount() const override;
+    virtual Node getEndNode() const override;
 
     virtual Node forEachNode(const NodeCall& callback) const override;
     virtual Node forEachEgress(Node node, const ProgressCall& callback) const override;
@@ -52,6 +53,7 @@ public:
 private:
     typedef std::unordered_map<Node, std::unordered_map<Node, Weight>> HashTable;
     HashTable graph;
+    Node endNode = 0;
 };
 
 } // namespace granky

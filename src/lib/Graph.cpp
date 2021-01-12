@@ -23,10 +23,89 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <cassert>
 
 #include "Graph.h"
 
 namespace granky {
+
+bool Graph::haveEdge(const Node from, const Node to) const {
+    
+    return isWeight(getWeight(from, to));
+};
+
+bool Graph::haveEdge(const Node from, const Node to, const Weight weight) const {
+
+    if(isWeight(weight)) {
+
+        const Weight w = getWeight(from, to);
+        return isWeight(w) && w == weight;
+    }
+
+    return false;
+}
+
+bool Graph::haveDigress(const Node from, const Node to) const {
+
+    return haveEdge(from, to) || haveEdge(to, from);
+}
+
+Graph::Node Graph::forEachEdge(const EdgeCall& edgeCall) const {
+
+    const NodeCall nodeCall = [this, &edgeCall](Node from) {
+
+        const ProgressCall egressCall = [&edgeCall, &from](Node to, Weight weight) {
+
+            return edgeCall(from, to, weight);
+        };
+
+        return forEachEgress(from, egressCall);
+    };
+
+    return forEachNode(nodeCall);
+}
+
+bool Graph::isSubset(const Graph& other) const {
+
+    const EdgeCall edgeCall = [&other](Node from, Node to, Weight weight) {
+
+        if(other.haveEdge(from, to, weight)) {
+
+            return -1;
+        }
+
+        return to;
+    };
+
+    return !isNode(forEachEdge(edgeCall));
+}
+
+void Graph::addDoubleEdge(const Node from, const Node to, const Weight weight) {
+
+    addEdge(from, to, weight);
+    addEdge(to, from, weight);
+}
+
+Graph::Table::Instance Graph::getBlankNodeCheck() {
+
+    return move(Table::create<NodeCheck>(getEndNode()));
+}
+
+Graph::Table::Instance Graph::getNodeCheck() {
+
+    Table::Instance ret = getBlankNodeCheck();
+
+    const NodeCall callback = [&ret](Node node) {
+
+        ret->set(node, 1);
+        return -1;
+    };
+
+    forEachNode(callback);
+
+    return move(ret);
+}
+
 
 void Graph::parseFile(std::string_view filename) {
 
@@ -118,38 +197,26 @@ std::istream& operator >> (std::istream& in, Graph& graph) {
 
 Graph::Node Graph::NodeCheck::get(const Node node) const {
 
-    if(!Graph::isNode(node) || node >= table.size()) {
-
-        return -1;
-    }
-
-    return table[node] ? 1 : -1;
+    assert(Graph::isNode(node) && node < table.size());
+    return table[node];
 };
 
 void Graph::NodeCheck::set(const Node node, const Node value) {
 
-    if(Graph::isNode(node) && node < table.size()) {
-
-        table[node] = value;
-    }
+    assert(Graph::isNode(node) && node < table.size());
+    table[node] = value;
 };
 
 Graph::Node Graph::NodeTally::get(const Node node) const {
 
-    if(!Graph::isNode(node) || node >= table.size()) {
-
-        return -1;
-    }
-
+    assert(Graph::isNode(node) && node < table.size());
     return table[node];
 }
 
 void Graph::NodeTally::set(const Node node, const Node value) {
 
-    if(Graph::isNode(node) && node < table.size()) {
-    
-        table[node] = value;
-    }
+    assert(Graph::isNode(node) && node < table.size());
+    table[node] = value;
 };
 
 } // namespace granky

@@ -116,4 +116,40 @@ std::istream& operator >> (std::istream& in, Graph& graph) {
     return in;
 }
 
+Graph::Node Graph::NodeCheck::get(const Node node) const {
+
+    if(!Graph::isNode(node) || node >= table.size()) {
+
+        return -1;
+    }
+
+    return table[node] ? 1 : -1;
+};
+
+void Graph::NodeCheck::set(const Node node, const Node value) {
+
+    if(Graph::isNode(node) && node < table.size()) {
+
+        table[node] = value;
+    }
+};
+
+Graph::Node Graph::NodeTally::get(const Node node) const {
+
+    if(!Graph::isNode(node) || node >= table.size()) {
+
+        return -1;
+    }
+
+    return table[node];
+}
+
+void Graph::NodeTally::set(const Node node, const Node value) {
+
+    if(Graph::isNode(node) && node < table.size()) {
+    
+        table[node] = value;
+    }
+};
+
 } // namespace granky

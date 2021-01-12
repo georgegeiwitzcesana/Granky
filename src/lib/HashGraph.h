@@ -37,13 +37,14 @@ public:
     HashGraph& operator=(const HashGraph&) = delete;
     HashGraph(HashGraph&&) = delete;
     HashGraph& operator=(const HashGraph&&) = delete;
-    HashGraph();
+    explicit HashGraph() {};
  
     virtual const EdgeList getEdges() const override;
     virtual bool haveNode(const Node node) const override;
     virtual Weight getWeight(const Node from, const Node to) const override;
     virtual void addNode(const Node node) override;
     virtual void addEdge(const Node from, const Node to, const Weight weight) override;
+    virtual Node getNodeCount() const override;
 
     virtual Node forEachNode(const NodeCall& callback) const override;
     virtual Node forEachEgress(Node node, const ProgressCall& callback) const override;

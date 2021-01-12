@@ -23,8 +23,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace granky {
 
-HashGraph::HashGraph() {};
-
 Graph::Node HashGraph::forEachNode(const NodeCall& callback) const {
 
     Node ret = -1;
@@ -110,6 +108,11 @@ void HashGraph::addEdge(const Node from, const Node to, const Weight weight) {
     addNode(from);
     addNode(to);
     graph[from][to] = weight;
+}
+
+Graph::Node HashGraph::getNodeCount() const {
+
+    return static_cast<Node>(graph.size());
 }
 
 } // namespace granky

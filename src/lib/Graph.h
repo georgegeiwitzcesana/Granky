@@ -54,6 +54,36 @@ class Graph {
 
 public:
     typedef int Node;
+
+    class Table {
+
+    public:
+        typedef std::unique_ptr<Table> Instance;
+        virtual Node get(const Node node) const = 0;
+        virtual void set(const Node node, const Node value) = 0;
+        template<class TABLE_TYPE> static Instance create(const Node count);
+    };
+
+    class NodeCheck : public Table {
+
+        std::vector<bool> table;
+
+    public:
+        NodeCheck(const Node count) : table(count) {};
+        virtual Node get(const Node node) const;
+        virtual void set(const Node node, const Node value);
+    };
+
+    class NodeTally : public Table {
+
+        std::vector<Node> table;
+
+    public:
+        NodeTally(const Node count) : table(count) {};
+        virtual Node get(const Node node) const;
+        virtual void set(const Node node, const Node value);
+    };
+
     typedef double Weight;
     typedef std::unique_ptr<Graph> Instance;
     typedef std::function<Node(Node)> NodeCall;
@@ -81,6 +111,7 @@ public:
     virtual const EdgeList getEdges() const = 0;
     virtual void addNode(const Node node) = 0;
     virtual void addEdge(const Node from, const Node to, const Weight weight) = 0;
+    virtual Node getNodeCount() const = 0;
 
     /**
      * All forEach methods stop iterating when the callback returns a non-negative number,
@@ -89,19 +120,19 @@ public:
     virtual Node forEachNode(const NodeCall& callback) const = 0;
     virtual Node forEachEgress(const Node from, const ProgressCall& callback) const = 0;
     
-    inline bool isNode(const Node node) const {
+    static inline bool isNode(const Node node) {
         
         return node >= 0;
     };
     
-    inline bool isWeight(const Weight weight) const {
+    static inline bool isWeight(const Weight weight) {
         
         return !isnan(weight);
     };
     
     inline bool haveEdge(const Node from, const Node to) const {
         
-        return !isnan(getWeight(from, to));
+        return isWeight(getWeight(from, to));
     };
  
     inline bool haveEdge(const Node from, const Node to, const Weight weight) const {
@@ -158,7 +189,27 @@ public:
         addEdge(from, to, weight);
         addEdge(to, from, weight);
     }
-       
+
+    inline Table::Instance getBlankNodeCheck() {
+
+        return move(Table::create<NodeCheck>(getNodeCount()));
+    }
+
+    inline Table::Instance getNodeCheck() {
+
+        Table::Instance ret = getBlankNodeCheck();
+
+        const NodeCall callback = [&ret](Node node) {
+
+            ret->set(node, 1);
+            return -1;
+        };
+
+        forEachNode(callback);
+
+        return move(ret);
+    }
+
     friend std::ostream& operator << (std::ostream& out, const Graph& g);
     friend std::istream& operator >> (std::istream& in, Graph& g);
 
@@ -166,6 +217,12 @@ public:
 
 protected:
 };
+
+template<class TABLE_TYPE>
+Graph::Table::Instance Graph::Table::create(const Node count) {
+
+    return Graph::Table::Instance(new(std::nothrow) TABLE_TYPE(count));
+}
 
 template<class GRAPH_TYPE>
 Graph::Instance Graph::create() {

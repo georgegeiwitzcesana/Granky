@@ -31,7 +31,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace granky {
 
-MatrixGraph::MatrixGraph() {};
+//explicit constexpr MatrixGraph::MatrixGraph() {};
 
 Graph::Node MatrixGraph::forEachNode(const NodeCall& callback) const {
 
@@ -132,6 +132,7 @@ void MatrixGraph::addNode(const Node node) {
     if(!isWeight(graph[node][node])) {
     
         graph[node][node] = 0.0;
+        ++nodeCount;
     }
 }
 
@@ -150,6 +151,11 @@ void MatrixGraph::addEdge(
 
         std::cout << "matrix added: " << from << " " << to << " " << " "  << weight << std::endl; 
     }
+}
+
+Graph::Node MatrixGraph::getNodeCount() const {
+
+    return nodeCount;
 }
 
 } // namespace granky

@@ -37,12 +37,13 @@ public:
     MatrixGraph& operator=(const MatrixGraph&) = delete;
     MatrixGraph(MatrixGraph&&) = delete;
     MatrixGraph& operator=(const MatrixGraph&&) = delete;
-    MatrixGraph();
+    explicit MatrixGraph() {};
  
     virtual const EdgeList getEdges() const override;
     virtual bool haveNode(const Node node) const override;
     virtual Weight getWeight(const Node from, const Node to) const override;
     virtual void addNode(const Node node) override;
+    virtual Node getNodeCount() const override;
 
     virtual Node forEachNode(const NodeCall& callback) const override;
     virtual Node forEachEgress(const Node from, const ProgressCall& callback) const override;
@@ -55,6 +56,9 @@ public:
 private:
     typedef std::vector<std::vector<Weight>> Matrix;
     Matrix graph;
+    Node nodeCount = 0;
+
+protected:
 };
 
 } // namespace granky

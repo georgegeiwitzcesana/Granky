@@ -73,6 +73,58 @@ Graph::Node MatrixGraph::forEachEgress(const Node from, const ProgressCall& call
     return ret;
 }
 
+Graph::Node MatrixGraph::forEachIngress(const Node to, const ProgressCall& callback) const {
+
+    if(!haveNode(to)) {
+
+        return -1;
+    }
+
+    Node ret = -1;
+    
+    for(Node from = 0; !isNode(ret) && from < graph.size(); ++from) {
+
+        if(from == to) {
+
+            continue;
+        }
+
+        if(const auto weight = getWeight(from, to); isWeight(weight)) {
+
+            ret = callback(from, weight);
+        }
+    }
+
+    return ret;
+}
+
+Graph::Node MatrixGraph::forEachLightDigress(const Node from, const ProgressCall& callback) const {
+
+    if(!haveNode(from)) {
+
+        return -1;
+    }
+
+    Node ret = -1;
+    
+    for(Node to = 0; !isNode(ret) && to < graph.size(); ++to) {
+
+        if(from == to) {
+
+            continue;
+        }
+
+        const auto weight = getLightDigress(from, to);
+
+        if(isWeight(weight)) {
+
+            ret = callback(to, weight);
+        }
+    }
+
+    return ret;
+}
+
 const Graph::EdgeList MatrixGraph::getEdges() const {
 
     EdgeList ret;

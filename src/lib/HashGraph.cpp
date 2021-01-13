@@ -49,7 +49,61 @@ Graph::Node HashGraph::forEachEgress(const Node from, const ProgressCall& callba
 
     for(auto& each : graph.at(from)) {
 
-        if(ret = callback(each.first, each.second); isNode(ret)) {
+        const auto& to = each.first;
+        const auto& weight = each.second;
+        
+        if(ret = callback(to, weight); isNode(ret)) {
+
+            return ret;
+        }
+    }
+
+    return ret;
+}
+
+Graph::Node HashGraph::forEachIngress(const Node to, const ProgressCall& callback) const {
+
+    if(!haveNode(to)) {
+
+        return -1;
+    }
+
+    Node ret = -1;
+
+    for(const auto& each : graph) {
+
+        const auto& from = each.first;
+        const auto& adjacent = each.second;
+
+        if(const auto got = adjacent.find(to); got != adjacent.end()) {
+
+            const auto& weight = got->second;
+
+            if(ret = callback(from, weight); isNode(ret)) {
+
+                return ret;
+            }
+        }
+    }
+
+    return ret;
+}
+
+Graph::Node HashGraph::forEachLightDigress(const Node from, const ProgressCall& callback) const {
+
+    if(!haveNode(from)) {
+
+        return -1;
+    }
+
+    Node ret = -1;
+
+    for(auto& each : graph.at(from)) {
+
+        const auto& to = each.first;
+        const auto weight = getLightDigress(from, to);
+        
+        if(ret = callback(to, weight); isNode(ret)) {
 
             return ret;
         }

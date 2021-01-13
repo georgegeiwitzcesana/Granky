@@ -50,6 +50,15 @@ bool Graph::haveDigress(const Node from, const Node to) const {
     return haveEdge(from, to) || haveEdge(to, from);
 }
 
+Graph::Weight Graph::getLightDigress(const Node from, const Node to) const {
+
+    const auto ex = getWeight(from, to);
+    const auto in = getWeight(to, from);
+    const auto isEx = isWeight(ex);
+    const auto isIn = isWeight(in);
+    return isEx && isIn ? std::min(ex, in) : isEx ? ex : isIn ? in : NAN;
+}
+
 Graph::Node Graph::forEachEdge(const EdgeCall& edgeCall) const {
 
     const NodeCall nodeCall = [this, &edgeCall](Node from) {
@@ -89,6 +98,11 @@ void Graph::addDoubleEdge(const Node from, const Node to, const Weight weight) {
 Graph::Table::Instance Graph::getBlankNodeCheck() {
 
     return move(Table::create<NodeCheck>(getEndNode()));
+}
+
+Graph::Table::Instance Graph::getBlankNodeTally() {
+
+    return move(Table::create<NodeTally>(getEndNode()));
 }
 
 Graph::Table::Instance Graph::getNodeCheck() {
@@ -198,13 +212,13 @@ std::istream& operator >> (std::istream& in, Graph& graph) {
 Graph::Node Graph::NodeCheck::get(const Node node) const {
 
     assert(Graph::isNode(node) && node < table.size());
-    return table[node];
+    return table[node] ? 1 : -1;
 };
 
 void Graph::NodeCheck::set(const Node node, const Node value) {
 
     assert(Graph::isNode(node) && node < table.size());
-    table[node] = value;
+    table[node] = Graph::isNode(value);
 };
 
 Graph::Node Graph::NodeTally::get(const Node node) const {

@@ -122,19 +122,84 @@ int main(int argc, const char** argv) {
     }
 
     {
-        auto graph = granky::Graph::create<granky::MatrixGraph>("in/Fiset3.gky");
+        auto graph = granky::Graph::create<granky::MatrixGraph>();
+        graph->parseString(CASE[0]);
         granky::RecursiveDFS dfs;
         dfs.init(graph.get());
+        dfs.setSource(1);
         dfs.execute();
-        TEST1(dfs.yieldWeight() == 14.0, *graph);
+        TEST1(dfs.yieldWeight() == 1.0, *graph);
     }
 
     {
-        auto graph = granky::Graph::create<granky::HashGraph>("in/Fiset3.gky");
+        auto graph = granky::Graph::create<granky::HashGraph>();
+        graph->parseString(CASE[2]);
         granky::RecursiveDFS dfs;
         dfs.init(graph.get());
+        dfs.setSource(1);
         dfs.execute();
-        TEST1(dfs.yieldWeight() == 14.0, *graph);
+        TEST1(dfs.yieldWeight() == 2.0, *graph);
+    }
+
+    {
+        auto graph = granky::Graph::create<granky::HashGraph>();
+        graph->parseString(CASE[2]);
+        granky::RecursiveDigraphDFS dfs;
+        dfs.init(graph.get());
+        dfs.setSource(1);
+        dfs.execute();
+        TEST1(dfs.yieldWeight() == 1.0, *graph);
+    }
+
+    {
+        auto graph = granky::Graph::create<granky::HashGraph>();
+        graph->parseString(CASE[2]);
+        granky::RecursiveDFS dfs;
+        dfs.init(graph.get());
+        dfs.setSource(0);
+        dfs.execute();
+        TEST1(dfs.yieldWeight() == 1.0, *graph);
+    }
+
+    {
+        auto graph = granky::Graph::create<granky::MatrixGraph>();
+        graph->parseString(CASE[2]);
+        granky::RecursiveDigraphDFS dfs;
+        dfs.init(graph.get());
+        dfs.setSource(0);
+        dfs.execute();
+        TEST1(dfs.yieldWeight() == 1.0, *graph);
+    }
+
+    {
+        auto graph = granky::Graph::create<granky::HashGraph>();
+        graph->parseString(CASE[2]);
+        granky::RecursiveDigraphDFS dfs;
+        dfs.init(graph.get());
+        dfs.setSource(0);
+        dfs.execute();
+        TEST1(dfs.yieldWeight() == 1.0, *graph);
+    }
+
+    {
+        auto graph = granky::Graph::create<granky::MatrixGraph>();
+        graph->parseString(CASE[2]);
+        granky::ColorComponents dfs;
+        dfs.init(graph.get());
+        dfs.execute();
+        TEST1(dfs.yieldWeight() == 1.0, *graph);
+    }
+
+    {
+        auto graph = granky::Graph::create<granky::HashGraph>(
+                "in/Fiset4.gky"
+                );
+
+        granky::ColorComponents dfs;
+        dfs.init(graph.get());
+        dfs.execute();
+        std::cout << dfs.yieldWeight() << std::endl;
+        TEST1(dfs.yieldWeight() == 1.0, *graph);
     }
 
     return 0;

@@ -69,7 +69,7 @@ public:
         std::vector<bool> table;
 
     public:
-        NodeCheck(const Node count) : table(count) {};
+        NodeCheck(const Node count) : table(count, 0) {};
         virtual Node get(const Node node) const;
         virtual void set(const Node node, const Node value);
     };
@@ -79,7 +79,7 @@ public:
         std::vector<Node> table;
 
     public:
-        NodeTally(const Node count) : table(count) {};
+        NodeTally(const Node count) : table(count, -1) {};
         virtual Node get(const Node node) const;
         virtual void set(const Node node, const Node value);
     };
@@ -121,7 +121,9 @@ public:
      */
     virtual Node forEachNode(const NodeCall& callback) const = 0;
     virtual Node forEachEgress(const Node from, const ProgressCall& callback) const = 0;
-    
+    virtual Node forEachIngress(const Node to, const ProgressCall& callback) const = 0;
+    virtual Node forEachLightDigress(const Node to, const ProgressCall& callback) const = 0;
+
     static inline bool isNode(const Node node) {
         
         return node >= 0;
@@ -134,12 +136,14 @@ public:
     
     bool haveEdge(const Node from, const Node to) const;
     bool haveEdge(const Node from, const Node to, const Weight weight) const; 
-    bool haveDigress(const Node from, const Node to) const; 
+    bool haveDigress(const Node from, const Node to) const;
+    Weight getLightDigress(const Node from, const Node to) const;
     Node forEachEdge(const EdgeCall& edgeCall) const; 
     bool isSubset(const Graph& other) const; 
     void addDoubleEdge(const Node from, const Node to, const Weight weight); 
     Table::Instance getBlankNodeCheck(); 
     Table::Instance getNodeCheck(); 
+    Table::Instance getBlankNodeTally();
 
     friend std::ostream& operator << (std::ostream& out, const Graph& g);
     friend std::istream& operator >> (std::istream& in, Graph& g);

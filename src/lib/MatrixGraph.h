@@ -48,6 +48,8 @@ public:
 
     virtual Node forEachNode(const NodeCall& callback) const override;
     virtual Node forEachEgress(const Node from, const ProgressCall& callback) const override;
+    virtual Node forEachIngress(const Node to, const ProgressCall& callback) const override;
+    virtual Node forEachLightDigress(const Node from, const ProgressCall& callback) const override;
 
     virtual void addEdge(
             const Node from,
